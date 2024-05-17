@@ -9,8 +9,9 @@
 struct UIUpdateData
 {
     float pos[3];
-    int rand_force;
+    float force;
     float freq;
+    double vz_target;
 };
 
 // CTESTForcecontrolv03Dlg 대화 상자
@@ -50,26 +51,36 @@ public:
     
     CEdit m_var_force;
     CEdit m_var_freq_force;
-    CEdit m_var_freq_UI;
+    CEdit m_var_freq_vz;
     
     CEdit var_posX;
     CEdit var_posY;
     CEdit var_posZ;
 
     // Variable
-    float var_freq_force; // 주파수 측정 결과를 저장할 변수
+    float var_force;
+    float var_freq_force;   // 주파수 측정 결과를 저장할 변수
     float ini_pos_actual[3] = { 0.0, 0.0, 0.0 }; // 초기 위치
+    float noise = 0.0;
+    float Fd = 20.0f;       // Desired force
+    float F_total = 0.0f;
+
+    // TTCA 제어기 관련 변수
+    float F_old = 0.0f;
+    float F_old_time = 0.0f;
+    float TTCA_f_des_dot = 0.0f;
+    float TTCA_alpha = 1.0f;
+    float TTCA_kf = 0.5f;
+    float TTCA_gma_hat = 0.0f;
+    float vz_target = 0.0f;
 
     // Flag
-    int flag_thread_force;
     int flag_start;
-    int flag_thread_polishing;
+    int flag_thread_force;
 
     // Thread-related
     CWinThread* m_pThread_force;
     bool m_bRunThread_force;
-    CWinThread* m_pThread_polishing;
-    bool m_bRunThread_polishing;
 
     // 사용자 정의 메시지 핸들러
     afx_msg LRESULT OnUpdateUI(WPARAM wParam, LPARAM lParam);

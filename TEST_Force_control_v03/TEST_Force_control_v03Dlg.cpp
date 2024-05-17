@@ -44,11 +44,8 @@ CTESTForcecontrolv03Dlg::CTESTForcecontrolv03Dlg(CWnd* pParent /*=nullptr*/)
     : CDialogEx(IDD_TEST_FORCE_CONTROL_V03_DIALOG, pParent),
     m_pThread_force(nullptr),
     m_bRunThread_force(false),
-    m_pThread_polishing(nullptr),
-    m_bRunThread_polishing(false),
     flag_start(0),
-    flag_thread_force(0),
-    flag_thread_polishing(0)
+    flag_thread_force(0)
 {
     m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -59,7 +56,7 @@ void CTESTForcecontrolv03Dlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_EDIT_Status, msg_status_gui);
     DDX_Control(pDX, IDC_EDIT_force, m_var_force);
     DDX_Control(pDX, IDC_EDIT_freq_force, m_var_freq_force);
-    DDX_Control(pDX, IDC_EDIT_freq_UI, m_var_freq_UI);
+    DDX_Control(pDX, IDC_EDIT_freq_vz, m_var_freq_vz);
     DDX_Control(pDX, IDC_EDIT_posX, var_posX);
     DDX_Control(pDX, IDC_EDIT_posY, var_posY);
     DDX_Control(pDX, IDC_EDIT_posZ, var_posZ);
@@ -76,15 +73,28 @@ END_MESSAGE_MAP()
 
 LRESULT CTESTForcecontrolv03Dlg::OnUpdateUI(WPARAM wParam, LPARAM lParam)
 {
-    UIUpdateData* data = reinterpret_cast<UIUpdateData*>(lParam);
-    SetEditText(var_posX, data->pos[0]);
-    SetEditText(var_posY, data->pos[1]);
-    SetEditText(var_posZ, data->pos[2]);
-    CString strFreq;
-    strFreq.Format(_T("%.2f Hz"), data->freq);
-    m_var_freq_force.SetWindowTextW(strFreq);
-    delete data; // 동적 할당된 메모리 해제
-    return 0;
+    if (flag_thread_force == 1)
+    {
+        UIUpdateData* data = reinterpret_cast<UIUpdateData*>(lParam);
+        SetEditText(var_posX, data->pos[0]);
+        SetEditText(var_posY, data->pos[1]);
+        SetEditText(var_posZ, data->pos[2]);
+
+        CString strForce;
+        strForce.Format(_T("%.2f"), data->force);
+        m_var_force.SetWindowTextW(strForce);
+
+        CString strFreq;
+        strFreq.Format(_T("%.2f Hz"), data->freq);
+        m_var_freq_force.SetWindowTextW(strFreq);
+
+        CString strVzTarget;
+        strVzTarget.Format(_T("%.2f"), data->vz_target);
+        m_var_freq_vz.SetWindowTextW(strVzTarget);
+
+        delete data; // 동적 할당된 메모리 해제
+        return 0;
+    }
 }
 
 BOOL CTESTForcecontrolv03Dlg::OnInitDialog()
@@ -143,21 +153,21 @@ void CTESTForcecontrolv03Dlg::OnBnClickedButStart()
 {
     flag_start = 1;
     OnBnClickedButForce();
-
-    if (flag_thread_force == 1 && !m_bRunThread_force)
-    {
-        m_bRunThread_force = true; // Thread가 실행 중임을 표현
-        m_pThread_force = AfxBeginThread(Thread_force_test, this);
-        Status_gui_str = _T("Random Force 생성 Thread 동작 중...");
-        msg_status_gui.SetWindowTextW(Status_gui_str);
-    }
 }
 
 void CTESTForcecontrolv03Dlg::OnBnClickedButForce()
 {
-    if (flag_start == 1)
+    if (flag_start)
     {
         flag_thread_force = 1;
+
+        if (flag_thread_force == 1 && !m_bRunThread_force)
+        {
+            m_bRunThread_force = true;                  // Thread가 실행 중임을 표현
+            m_pThread_force = AfxBeginThread(Thread_force, this);
+            Status_gui_str = _T("Random Force 생성 Thread 동작 중...");
+            msg_status_gui.SetWindowTextW(Status_gui_str);
+        }
     }
     else
     {
@@ -167,12 +177,14 @@ void CTESTForcecontrolv03Dlg::OnBnClickedButForce()
 
 void CTESTForcecontrolv03Dlg::OnBnClickedButClose()
 {
-    m_bRunThread_force = false; // Thread를 종료시킴
-    if (m_pThread_force != nullptr)
+    if (flag_thread_force)
     {
-        WaitForSingleObject(m_pThread_force->m_hThread, INFINITE); // Thread가 종료될 때까지 대기함
-        m_pThread_force = nullptr;
+        m_bRunThread_force = false; // Thread를 종료시킴
+        if (m_pThread_force != nullptr)
+        {
+            WaitForSingleObject(m_pThread_force->m_hThread, INFINITE); // Thread가 종료될 때까지 대기함
+            m_pThread_force = nullptr;
+        }
     }
-
     EndDialog(IDOK);
 }

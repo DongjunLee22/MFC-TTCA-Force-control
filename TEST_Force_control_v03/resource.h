@@ -16,8 +16,8 @@
 #define IDC_EDIT_posX                   1006
 #define IDC_EDIT_posY                   1007
 #define IDC_EDIT_posZ                   1008
-#define IDC_EDIT_freq_force2            1009
 #define IDC_EDIT_freq_UI                1009
+#define IDC_EDIT_freq_vz                1009
 
 // Next default values for new objects
 // 
