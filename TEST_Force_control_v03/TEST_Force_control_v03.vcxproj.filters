@@ -66,6 +66,7 @@
     <None Include="res\TESTForcecontrolv03.rc2">
       <Filter>리소스 파일</Filter>
     </None>
+    <None Include="Text File.gitignore" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\TEST_Force_control_v03.ico">

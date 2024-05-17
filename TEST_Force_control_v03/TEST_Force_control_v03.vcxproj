@@ -209,6 +209,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\TESTForcecontrolv03.rc2" />
+    <None Include="Text File.gitignore" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\TEST_Force_control_v03.ico" />

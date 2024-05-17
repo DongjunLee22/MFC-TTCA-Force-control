@@ -1,0 +1,43 @@
+# Visual Studio
+.vscode/
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+$RECYCLE.BIN/
+
+# VS Code directories
+.vscode/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+*.inf
+*.log
+
+# Windows shortcuts
+*.lnk
+
+# Visual Studio temporary files
+*.ncb
+*.sdf
+*.opensdf
+*.sln
+
+# Visual Studio build output
+[Dd]ebug*/
+[Rr]elease*/
+x64/
+build/
+[Bb]in/
+[Oo]bj/
