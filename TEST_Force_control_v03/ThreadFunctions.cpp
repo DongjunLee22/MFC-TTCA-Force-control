@@ -14,12 +14,11 @@ UINT Thread_force(LPVOID pParam)
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> dis(-5.0f, 5.0f); // -5N ~ +5N의 노이즈
+    std::uniform_real_distribution<float> dis(-2.0f, 5.0f); // 랜덤 노이즈 생성 범위
 
     // Local Variable
     float noise = g_pDlg->noise;
-    float var_force = g_pDlg->var_force;
-    float F_total = g_pDlg->var_force;
+    float F_total = g_pDlg->F_total;
     float Fd = g_pDlg->Fd;
     float TTCA_gma_hat = g_pDlg->TTCA_gma_hat;
     float TTCA_f_des_dot = g_pDlg->TTCA_f_des_dot;
@@ -52,9 +51,9 @@ UINT Thread_force(LPVOID pParam)
         ts = high_resolution_clock::now();
 
         // 20N의 일정한 힘에 랜덤 노이즈 추가
+        F_total = 20.0;
         noise = dis(gen);
-        var_force = 20.0f + noise;
-        F_total = var_force;
+        F_total = F_total + noise;
 
         // TTCA 제어기 호출
         float current_time = duration_cast<nanoseconds>(high_resolution_clock::now() - t_start).count() / 1e9f;
@@ -76,7 +75,7 @@ UINT Thread_force(LPVOID pParam)
             data->pos[0] = pos[0];
             data->pos[1] = pos[1];
             data->pos[2] = pos[2];
-            data->force = var_force;
+            data->force = F_total;
             data->freq = var_freq_force;
             data->vz_target = vz_target * 0.001;
             data->TTCA_f_des_dot = TTCA_f_des_dot;
@@ -117,7 +116,6 @@ UINT Thread_force(LPVOID pParam)
 
     // 쓰레드 종료 시, 업데이트된 값을 다시 g_pDlg에 저장
     g_pDlg->noise = noise;
-    g_pDlg->var_force = var_force;
     g_pDlg->F_total = F_total;
     g_pDlg->TTCA_gma_hat = TTCA_gma_hat;
     g_pDlg->TTCA_f_des_dot = TTCA_f_des_dot;

@@ -67,12 +67,11 @@ public:
     CEdit m_var_cur_time;
 
     // Variable
-    float var_force;
     float var_freq_force;   // 주파수 측정 결과를 저장할 변수
     float ini_pos_actual[3] = { 0.0, 0.0, 0.0 }; // 초기 위치
     float noise = 0.0;
     float Fd = 20.0f;       // Desired force
-    float F_total = 0.0f;
+    float F_total = 25.0f;
     float current_time = 0.0;
 
     // TTCA 제어기 관련 변수
