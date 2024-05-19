@@ -54,12 +54,16 @@ void CTESTForcecontrolv03Dlg::DoDataExchange(CDataExchange* pDX)
 {
     CDialogEx::DoDataExchange(pDX);
     DDX_Control(pDX, IDC_EDIT_Status, msg_status_gui);
+    DDX_Control(pDX, IDC_EDIT_cur_time, m_var_cur_time);
     DDX_Control(pDX, IDC_EDIT_force, m_var_force);
     DDX_Control(pDX, IDC_EDIT_freq_force, m_var_freq_force);
     DDX_Control(pDX, IDC_EDIT_freq_vz, m_var_freq_vz);
     DDX_Control(pDX, IDC_EDIT_posX, var_posX);
     DDX_Control(pDX, IDC_EDIT_posY, var_posY);
     DDX_Control(pDX, IDC_EDIT_posZ, var_posZ);
+    DDX_Control(pDX, IDC_EDIT_F_des_dot, m_var_f_des_dot);
+    DDX_Control(pDX, IDC_EDIT_Gma_hat, m_var_gma_hat);
+    DDX_Control(pDX, IDC_EDIT_Err_f, m_var_err_f);
 }
 
 BEGIN_MESSAGE_MAP(CTESTForcecontrolv03Dlg, CDialogEx)
@@ -76,6 +80,8 @@ LRESULT CTESTForcecontrolv03Dlg::OnUpdateUI(WPARAM wParam, LPARAM lParam)
     if (flag_thread_force == 1)
     {
         UIUpdateData* data = reinterpret_cast<UIUpdateData*>(lParam);
+        SetEditText(m_var_cur_time, data->current_time);
+
         SetEditText(var_posX, data->pos[0]);
         SetEditText(var_posY, data->pos[1]);
         SetEditText(var_posZ, data->pos[2]);
@@ -91,6 +97,10 @@ LRESULT CTESTForcecontrolv03Dlg::OnUpdateUI(WPARAM wParam, LPARAM lParam)
         CString strVzTarget;
         strVzTarget.Format(_T("%.2f"), data->vz_target);
         m_var_freq_vz.SetWindowTextW(strVzTarget);
+
+        SetEditText(m_var_f_des_dot, data->TTCA_f_des_dot);
+        SetEditText(m_var_gma_hat, data->TTCA_gma_hat);
+        SetEditText(m_var_err_f, data->TTCA_err_f);
 
         delete data; // 동적 할당된 메모리 해제
         return 0;

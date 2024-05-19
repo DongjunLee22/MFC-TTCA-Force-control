@@ -29,6 +29,7 @@ UINT Thread_force(LPVOID pParam)
     float TTCA_kf = g_pDlg->TTCA_kf;
     float vz_target = g_pDlg->vz_target;
     float var_freq_force = g_pDlg->var_freq_force;
+    float TTCA_err_f = g_pDlg->TTCA_err_f;
 
     // 주기 제어 및 측정을 위한 변수
     high_resolution_clock::time_point ts, t_start;
@@ -60,12 +61,12 @@ UINT Thread_force(LPVOID pParam)
 
         TTCAcontrol(Fd, F_total, TTCA_gma_hat, TTCA_f_des_dot,
             F_old, F_old_time, TTCA_alpha, TTCA_kf,
-            current_time, vz_target);
+            current_time, vz_target, TTCA_err_f);
 
         pos[0] += 1.0;
         pos[2] += 2.0;
 
-        
+
         //////////////////////////////////////////////////////////////////////////
         //// 주기적으로 UI 업데이트 메시지 포스트 +++++++++++++++++++++++++++
         //////////////////////////////////////////////////////////////////////////
@@ -77,7 +78,10 @@ UINT Thread_force(LPVOID pParam)
             data->pos[2] = pos[2];
             data->force = var_force;
             data->freq = var_freq_force;
-            data->vz_target = vz_target*0.001;
+            data->vz_target = vz_target * 0.001;
+            data->TTCA_f_des_dot = TTCA_f_des_dot;
+            data->TTCA_gma_hat = TTCA_gma_hat;
+            data->TTCA_err_f = TTCA_err_f;
             g_pDlg->PostMessage(WM_UPDATE_UI, 0, reinterpret_cast<LPARAM>(data));
             update_counter = 0; // Reset counter
         }

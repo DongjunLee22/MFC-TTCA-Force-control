@@ -16,8 +16,12 @@
 #define IDC_EDIT_posX                   1006
 #define IDC_EDIT_posY                   1007
 #define IDC_EDIT_posZ                   1008
-#define IDC_EDIT_freq_UI                1009
 #define IDC_EDIT_freq_vz                1009
+#define IDC_EDIT_F_des_dot              1010
+#define IDC_EDIT_Gma_hat                1011
+#define IDC_EDIT_Err_f                  1012
+#define IDC_EDIT_freq_vz2               1013
+#define IDC_EDIT_cur_time               1013
 
 // Next default values for new objects
 // 
@@ -25,7 +29,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1007
+#define _APS_NEXT_CONTROL_VALUE         1011
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -12,6 +12,10 @@ struct UIUpdateData
     float force;
     float freq;
     double vz_target;
+    float TTCA_f_des_dot;
+    float TTCA_gma_hat;
+    float TTCA_err_f;
+    float current_time;
 };
 
 // CTESTForcecontrolv03Dlg 대화 상자
@@ -48,14 +52,19 @@ public:
     // Msg
     CString Status_gui_str;
     CEdit msg_status_gui;
-    
+
     CEdit m_var_force;
     CEdit m_var_freq_force;
     CEdit m_var_freq_vz;
-    
+
     CEdit var_posX;
     CEdit var_posY;
     CEdit var_posZ;
+
+    CEdit m_var_f_des_dot;
+    CEdit m_var_gma_hat;
+    CEdit m_var_err_f;
+    CEdit m_var_cur_time;
 
     // Variable
     float var_force;
@@ -64,6 +73,7 @@ public:
     float noise = 0.0;
     float Fd = 20.0f;       // Desired force
     float F_total = 0.0f;
+    float current_time = 0.0;
 
     // TTCA 제어기 관련 변수
     float F_old = 0.0f;
@@ -72,6 +82,7 @@ public:
     float TTCA_alpha = 1.0f;
     float TTCA_kf = 0.5f;
     float TTCA_gma_hat = 0.0f;
+    float TTCA_err_f = 0.0f;
     float vz_target = 0.0f;
 
     // Flag
